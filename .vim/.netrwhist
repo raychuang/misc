@@ -1,0 +1,5 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =3
+let g:netrw_dirhist_1='/var/www/2144/branches/1.0/project.manage'
+let g:netrw_dirhist_2='/var/www/2144'
+let g:netrw_dirhist_3='/var/www/2144/.git'
