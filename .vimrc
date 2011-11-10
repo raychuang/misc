@@ -125,9 +125,6 @@ map <C-l> <C-W>l
 
 let mapleader=","
 
-"把esc影射为jj
-inoremap jj <ESC>
-
 map <S-Tab> :bn<CR>
 map <F7> :tabprev<CR>
 map <F8> :tabnext<CR>
@@ -148,10 +145,6 @@ map <F9> :CommandT<CR>
 map <F11> :NERDTreeToggle<CR>
 map <F12> :TlistToggle<CR>
 
- "F4处理行尾的空格以及文件尾部的多余空行
-autocmd BufRead,BufWrite * if ! &bin | silent! %s/\s\+$//ge | endif
-"Remove indenting on empty line
-map <F4> :w<CR>:call CleanupBuffer(1)<CR>:noh<CR>
 "============================KEY MAP END===================================
 "
 
@@ -184,6 +177,31 @@ let s:licenseTag = s:licenseTag . "All right reserved\<enter>"
 let g:DoxygenToolkit_licenseTag = s:licenseTag
 let g:DoxygenToolkit_briefTag_funcName="yes"
 let g:doxygen_enhanced_color=1
+let g:user_zen_settings = {
+ \  'indentation' : '  ',
+ \  'perl' : {
+ \    'aliases' : {
+ \      'req' : 'require ',
+ \    },
+ \   },
+ \  'php' : {
+ \    'extends' : 'html ',
+ \    'filters' : 'html,c ',
+ \    },
+ \  'css' : {
+ \    'filters' : 'fc ',
+ \    },
+ \  'javascript': {
+ \    'snippets':{
+ \      'jq' : "$(function() {\n\t${cursor}${child}\n}); ",
+ \      'jq:each' : "$.each(arr, function(index, item)\n\t${child}\n}); ",
+ \      'fn' : "(function() {\n\t${cursor}\n})(); ",
+ \      'tm' : "setTimeout(function() {\n\t${cursor}\n}, 100); ",
+ \       },
+ \    },
+ \}
+let g:user_zen_expandabbr_key = '<c-e>'    "设置为ctrl+e展开
+let g:use_zen_complete_tag = 1
 "============================Plugin Option END==============================
 "for debug
 set swapsync=
@@ -204,36 +222,3 @@ hi link phpheredoc string
 "显示TAB键
 set list
 set listchars=tab:>-,trail:-
-
-
-"Automatically remove trailing spaces when saving a file.
-function! CleanupBuffer(keep)
-    " Skip binary files
-    if (&bin > 0)
-        return
-    endif
-    " Remove spaces and tabs from end of every line, if possible
-    silent! %s/\s\+$//ge
-    " Save current line number
-    let lnum = line(".")
-    " number of last line
-    let lastline = line("$")
-    let n        = lastline
-    " while loop
-    while (1)
-        " content of last line
-        let line = getline(n)
-        " remove spaces and tab
-        if (!empty(line))
-            break
-        endif
-        let n = n - 1
-    endwhile
-    " Delete all empty lines at the end of file
-    let start = n+1+a:keep
-    if (start < lastline)
-        execute n+1+a:keep . "," . lastline . "d"
-    endif
-    " after clean spaces and tabs, jump back
-    exec "normal " . lnum . "G"
-endfunction
